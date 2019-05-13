@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Matrizes de Transformação </title>
+    <link href="layout.css" rel="stylesheet">
+    <script src="mathfunctions.js"></script>
+    <script src="objects.js"></script>
+</head>
+
+<body>
+    <section id="corpo">
+        <h1>Matrizes de Transformação aplicados em Objetos Simples: Box e Sphere</h1>
+        <br>
+        <canvas id="canvas" width="600" height="350" class="playable-canvas"></canvas>
+        <br>
+        <textarea id="code" class="playable-code">
+a = new Box();
+a.draw();
+  </textarea>
+        <br>
+        <section id="doc">
+            Para criar um novo retângulo utilize o seguinte comando <br>"var caixa = new Box(centro, altura, largura)",<br>onde centro é um vetor de três posições, por padrão [0,0,1], altura e largura são valores para altura e largura da caixa, por padrão
+            valem 50.
+        </section>
+        <script src="script.js"></script>
+    </section>
+</body>
+
+</html>
