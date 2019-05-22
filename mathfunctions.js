@@ -8,12 +8,21 @@ function translate(x, y) { // dado dois pontos, x e y constroi a matriz homogene
 
 //TODO: dado dois pontos, x e y constroi a matriz homogenea de translação 3x3
 function scale(x, y) {
-    return //retorna matriz 3x3
+    return [
+        [x, 0, 0],
+        [0, y, 0],
+        [0, 0, 1]
+    ];
 }
 
 //TODO: dado um angulo theta em graus constroi a matriz homogenea de rotação 3x3
 function rotate(theta) {
-    return //retorna matriz 3x3
+    let radians = theta * Math.PI / 180;
+    return [
+        [Math.cos(radians), -Math.sin(radians), 0],
+        [Math.sin(radians), Math.cos(radians), 0],
+        [0, 0, 1]
+    ];
 }
 
 function identity(v = 1) { // identidade

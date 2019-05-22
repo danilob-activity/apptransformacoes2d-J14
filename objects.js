@@ -24,10 +24,14 @@ Box.prototype.setTranslate = function(x, y) {
 }
 
 //TODO: Aplicar matriz de rotação
-Box.prototype.setRotate = function(theta) {}
+Box.prototype.setRotate = function(theta) {
+    this.R = rotate(theta);
+}
 
 //TODO: Aplicar matriz de escala
-Box.prototype.setScale = function(x, y) {}
+Box.prototype.setScale = function(x, y) {
+    this.S = scale(x, y);
+}
 
 Box.prototype.draw = function(canvas = ctx) { //requer o contexto de desenho
     //pega matriz de tranformação de coordenadas canônicas para coordenadas do canvas
@@ -65,3 +69,67 @@ Box.prototype.draw = function(canvas = ctx) { //requer o contexto de desenho
 
 //TODO: Faça o objeto Circulo implementando as mesmas funcões e atributos que a caixa possui
 //      porém os valores básicos são o centro e o raio do circulo
+
+function Circle(center = [0, 0, 1], radius = 50) {
+    this.center = center;
+    this.radius = radius;
+    this.T = identity(); //matriz 3x3 de translação 
+    this.R = identity(); //matriz 3x3 de rotação
+    this.S = identity(); //matriz 3x3 de escala
+    this.fill = white; //cor de preenchimento -> aceita cor hex, ex.: this.fill = "#4592af"
+    this.stroke = black; //cor da borda -> aceita cor hex, ex.: this.stroke = "#a34a28"
+}
+
+Circle.prototype.setTranslate = function(x, y) {
+    this.T = translate(x, y);
+}
+
+Circle.prototype.setRotate = function(theta) {
+    this.R = rotate(theta);
+}
+
+Circle.prototype.setScale = function(x, y) {
+    this.S = scale(x, y);
+}
+
+Circle.prototype.draw = function(canvas=ctx) {
+    var M = transformCanvas(WIDTH, HEIGHT);
+    var Mg = mult(M, mult(mult(this.R, this.S), this.T));
+    canvas.lineWidth = 2;
+    canvas.strokeStyle = this.stroke;
+    canvas.fillStyle = this.fill;
+
+    var points = [];
+    points.push([this.center[0] + this.radius, this.center[1], 1]);
+    points.push([this.center[0], this.center[1] + this.radius, 1]);
+    points.push([this.center[0] - this.radius, this.center[1], 1]);
+    points.push([this.center[0], this.center[1] - this.radius, 1]);
+
+    let lado = (this.radius + 15) * Math.sqrt(2); // quadrado inscrito
+    var control = [];
+    control.push([this.center[0] + lado / 2, this.center[1] - lado / 2, 1]);
+    control.push([this.center[0] + lado / 2, this.center[1] + lado / 2, 1]);
+    control.push([this.center[0] - lado / 2, this.center[1] + lado / 2, 1]);
+    control.push([this.center[0] - lado / 2, this.center[1] - lado / 2, 1]);
+    
+
+    ctx.beginPath();
+    for (i = 0; i < points.length; i++) {
+        points[i] = multVec(Mg, points[i]);
+        control[i] = multVec(Mg, control[i]);
+        if (i == 0) canvas.moveTo(points[i][0], points[i][1]);
+        else ctx.quadraticCurveTo(
+            control[i][0],
+            control[i][1],
+            points[i][0], points[i][1]
+        );
+    }
+    ctx.quadraticCurveTo(
+        control[0][0],
+        control[0][1],
+        points[0][0], points[0][1]
+    );
+    canvas.fill(); //aplica cor de preenchimento
+    canvas.strokeStyle = this.stroke;
+    canvas.stroke(); //aplica cor de contorno
+}
